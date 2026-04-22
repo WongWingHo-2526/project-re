@@ -1,0 +1,26 @@
+{
+  "name": "Flask App",
+  "workspaceFolder": "/workspaces/alfred-self929",
+  "postCreateCommand": "flask --debug run --host=0.0.0.0 --port=5000",
+  "forwardPorts": [5000],
+  "portsAttributes": {
+    "5000": {
+      "label": "Flask App",
+      "onAutoForward": "openPreview"
+    }
+    ,
+    "5050": {
+      "label": "pgadmin",
+      "onAutoForward": "openPreview"
+    },
+    "8025": {
+      "label": "mailhog",
+      "onAutoForward": "openPreview"
+    }
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": ["ms-python.python"]
+    }
+  }
+}

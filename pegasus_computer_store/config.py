@@ -1,0 +1,20 @@
+import os
+
+class Config:
+    SECRET_KEY = os.environ.get('SECRET_KEY', 'pegasus-computer-store-secret-key-change-in-production')
+    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL', 'sqlite:///pegasus.db')SE_URL', 'sqlite:///pegasus.db')
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
+    
+    # Session配置
+    SESSION_COOKIE_NAME = 'pegasus_session'
+    SESSION_COOKIE_HTTPONLY = True
+    SESSION_COOKIE_SECURE = False  # 開發環境設為False
+    
+    # 上傳文件配置
+    UPLOAD_FOLDER = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static/uploads')
+    MAX_CONTENT_LENGTH = 16 * 1024 * 1024  # 16MB
+    ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'webp'}
+    
+    # 分頁配置
+    PRODUCTS_PER_PAGE = 12
+    ORDERS_PER_PAGE = 10

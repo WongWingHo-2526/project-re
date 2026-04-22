@@ -1,0 +1,75 @@
+services:
+  web1:
+    build:
+      context: .
+      dockerfile: dockerfile
+    environment:
+      - FLASK_APP=app.py
+      - FLASK_ENV=development
+      - DATABASE_URL=postgresql+psycopg2://postgres:postgres@postgresdb:5432/pegasus
+      - SECRET_KEY=pegasus-computer-store-secret-key-change-in-production
+    ports:
+      - "5000:5000"
+    volumes:
+      - .:/home
+    depends_on:
+      - postgresdb
+    command: ["./start.sh"]
+
+  web2:
+    build:
+      context: .
+      dockerfile: dockerfile
+    environment:
+      - FLASK_APP=app.py
+      - FLASK_ENV=development
+      - DATABASE_URL=postgresql+psycopg2://postgres:postgres@postgresdb:5432/pegasus
+      - SECRET_KEY=pegasus-computer-store-secret-key-change-in-production
+      - DELAY=5
+    ports:
+      - "5001:5000"
+    volumes:
+      - .:/home
+    depends_on:
+      - postgresdb
+    command: ["./start.sh"]
+
+  postgresdb:
+    container_name: postgres_container
+    image: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_DB: pegasus
+      POSTGRES_PASSWORD: postgres
+      PGDATA: /data/postgres
+    volumes:
+      - postgres:/data/postgres
+    ports:
+      - "5432:5432"
+    networks:
+      - flask_app
+    restart: unless-stopped
+
+  pgadmin:
+    container_name: pgadmin_container
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-pgadmin4@pgadmin.org}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-admin}
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+      PGADMIN_CONFIG_PROXY_X_HOST_COUNT: 1
+      PGADMIN_CONFIG_PROXY_X_PREFIX_COUNT: 1
+    volumes:
+      - pgadmin:/var/lib/pgadmin
+    ports:
+      - "${PGADMIN_PORT:-5050}:80"
+    networks:
+      - flask_app
+    restart: unless-stopped
+
+volumes:
+  postgres:
+  pgadmin:
+
+networks:
+  flask_app:
